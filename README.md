@@ -1,6 +1,8 @@
 # Profile Page
 
-Personal profile page for Dr. Manav Mahan Singh, built with Vite + React and deployed via GitHub Pages.
+Personal profile page for Manav Mahan SINGH (PhD) — a coder-style interactive profile built with Vite + React + TypeScript, deployed via GitHub Pages.
+
+Features: interactive fake shell (`help`, `whoami`, `matrix`, …), editor-style tabs, typewriter hero, theme cycling (green/amber/blue, persisted), skill filters with proficiency meters, collapsible experience entries, scroll-reveal animations, and a scroll progress bar.
 
 ## Local development
 
@@ -26,4 +28,31 @@ Your page will be live at `https://<your-username>.github.io`.
 
 ## Editing content
 
-All page content lives in `src/data.js` — edit skills, experience, education, and awards there.
+All page content lives in `src/data.ts` — edit skills, experience, education, and awards there. Types are in `src/types.ts`.
+
+## Structure
+
+```
+src/
+├── main.tsx            # entry point
+├── App.tsx             # thin layout shell
+├── data.ts             # all page content (edit here)
+├── types.ts            # shared interfaces
+├── index.css           # theming + styles
+├── hooks/
+│   ├── useTheme.ts     # theme cycling + persistence
+│   ├── useTypewriter.ts
+│   └── useReveal.ts    # IntersectionObserver scroll reveal
+└── components/
+    ├── Hero.tsx        # photo, typewriter, action buttons
+    ├── Editor.tsx      # tab bar + panel switching
+    ├── SkillsPanel.tsx
+    ├── ExperiencePanel.tsx
+    ├── EducationPanel.tsx
+    ├── AwardsPanel.tsx
+    ├── Terminal.tsx    # interactive fake shell
+    ├── MatrixRain.tsx  # easter egg
+    ├── Reveal.tsx      # scroll-reveal wrapper
+    ├── ScrollProgress.tsx
+    └── StatusBar.tsx
+```

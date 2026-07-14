@@ -1,5 +1,7 @@
-export const profile = {
-  name: 'Dr. Manav Mahan Singh',
+import type { Profile, Skill, SkillTag, Experience, Education } from './types';
+
+export const profile: Profile = {
+  name: 'Manav Mahan SINGH (PhD)',
   title: 'AI Research & Development',
   tagline:
     'AI researcher passionate about developing smart solutions for the built world — applying software engineering, machine learning, and AI to create innovative solutions.',
@@ -9,26 +11,34 @@ export const profile = {
   languages: ['English (proficient)', 'German (beginner)', 'Hindi (native)'],
 };
 
-export const skills = [
-  'Python',
-  'TypeScript',
-  '.NET',
-  'BIM',
-  'CAD',
-  'Machine Learning',
-  'PyTorch',
-  'TensorFlow',
-  'LLMs & LoRA Training',
-  'AWS',
-  'Google Gemini',
-  'OpenAI',
-  'Hugging Face',
-  'React / Next.js',
-  'Databases',
-  'Docker',
+export const skills: Skill[] = [
+  { name: 'Python', level: 5, tag: 'lang' },
+  { name: 'TypeScript', level: 4, tag: 'lang' },
+  { name: '.NET / C#', level: 3, tag: 'lang' },
+  { name: 'React / Next.js', level: 4, tag: 'lang' },
+  { name: 'Machine Learning', level: 5, tag: 'ai' },
+  { name: 'PyTorch', level: 5, tag: 'ai' },
+  { name: 'TensorFlow', level: 4, tag: 'ai' },
+  { name: 'LLMs & LoRA Training', level: 5, tag: 'ai' },
+  { name: 'Google Gemini', level: 4, tag: 'ai' },
+  { name: 'OpenAI', level: 4, tag: 'ai' },
+  { name: 'Hugging Face', level: 4, tag: 'ai' },
+  { name: 'BIM', level: 5, tag: 'built' },
+  { name: 'CAD', level: 4, tag: 'built' },
+  { name: 'AWS', level: 4, tag: 'infra' },
+  { name: 'Docker', level: 4, tag: 'infra' },
+  { name: 'Databases', level: 4, tag: 'infra' },
 ];
 
-export const experience = [
+export const skillTags: Record<'all' | SkillTag, string> = {
+  all: 'all',
+  lang: 'languages',
+  ai: 'ai/ml',
+  built: 'built world',
+  infra: 'infra',
+};
+
+export const experience: Experience[] = [
   {
     role: 'AI Research & Development',
     org: 'NeoBIM GmbH, Karlsruhe, Germany',
@@ -68,7 +78,7 @@ export const experience = [
   },
 ];
 
-export const education = [
+export const education: Education[] = [
   {
     degree: 'PhD, Engineering Sciences',
     school: 'KU Leuven, Belgium',
@@ -86,7 +96,7 @@ export const education = [
   },
 ];
 
-export const awards = [
+export const awards: string[] = [
   'Visiting Researcher at ETH Zurich — ASL Scholarship, 2020, Belgium',
   'Winner, Student Competition — Digital Construction Brussels, 2018',
   'First Prize, National 3D Student Design Challenge — Autodesk, 2013, India',
