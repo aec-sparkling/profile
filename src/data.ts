@@ -7,7 +7,7 @@ export const profile: Profile = {
     'AI researcher passionate about developing smart solutions for the built world — applying software engineering, machine learning, and AI to create innovative solutions.',
   location: 'Essen, Germany',
   email: 'manav.mahan.singh@live.in',
-  linkedin: 'https://www.linkedin.com/in/manav-mahan-singh-871928b1',
+  linkedin: 'https://www.linkedin.com/in/manav-mahan-singh-871928b1/',
   languages: ['English (proficient)', 'German (beginner)', 'Hindi (native)'],
 };
 

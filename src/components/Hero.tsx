@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { profile } from '../data';
 import { useTypewriter } from '../hooks/useTypewriter';
+import { useScroll } from '../hooks/useScroll';
 import type { Theme } from '../types';
 
 const TYPED_LINES = [
@@ -19,6 +20,7 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
   const [copied, setCopied] = useState(false);
   const [glitch, setGlitch] = useState(false);
   const typed = useTypewriter(TYPED_LINES);
+  const { y } = useScroll();
 
   async function copyEmail() {
     try {
@@ -31,14 +33,16 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
   }
 
   return (
-    <header className="hero">
-      <img
-        src="/profile.png"
-        alt={profile.name}
-        className={`photo ${glitch ? 'glitch' : ''}`}
-        onMouseEnter={() => setGlitch(true)}
-        onAnimationEnd={() => setGlitch(false)}
-      />
+    <header className="hero" style={{ opacity: Math.max(1 - y / 600, 0.25) }}>
+      <div className="photo-wrap" style={{ transform: `translateY(${y * 0.18}px)` }}>
+        <img
+          src="/profile.png"
+          alt={profile.name}
+          className={`photo ${glitch ? 'glitch' : ''}`}
+          onMouseEnter={() => setGlitch(true)}
+          onAnimationEnd={() => setGlitch(false)}
+        />
+      </div>
       <div className="hero-text">
         <p className="hero-comment">{'/** hello, world */'}</p>
         <h1>

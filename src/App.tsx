@@ -6,6 +6,7 @@ import StatusBar from './components/StatusBar';
 import MatrixRain from './components/MatrixRain';
 import Reveal from './components/Reveal';
 import ScrollProgress from './components/ScrollProgress';
+import BackToTop from './components/BackToTop';
 import { useTheme } from './hooks/useTheme';
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
       <Reveal delay={120}>
         <Terminal onTheme={cycleTheme} onMatrix={() => setMatrix(true)} />
       </Reveal>
+      <BackToTop />
       <StatusBar />
     </div>
   );

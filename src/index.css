@@ -81,6 +81,10 @@ body::after {
   flex-wrap: wrap;
 }
 
+.photo-wrap {
+  will-change: transform;
+}
+
 .photo {
   width: 132px;
   height: 138px;
@@ -515,6 +519,38 @@ body::after {
 
 .statusbar .grow {
   flex: 1;
+}
+
+.statusbar-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.statusbar-link:hover {
+  text-decoration: underline;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 46px;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--accent);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 14px;
+  cursor: pointer;
+  z-index: 4;
+  animation: fadein 0.25s;
+  transition: all 0.15s;
+}
+
+.back-to-top:hover {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 55%, transparent);
 }
 
 /* ---------- scroll animations ---------- */
