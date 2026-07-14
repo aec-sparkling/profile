@@ -1,3 +1,4 @@
+import { jsPDF } from 'jspdf';
 import {
   profile,
   skills,
@@ -11,177 +12,169 @@ import {
 } from './data';
 import type { SkillTag, ResearchCategory } from './types';
 
-const esc = (s: string) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const MARGIN = 18;
+const PAGE_W = 210;
+const PAGE_H = 297;
+const CONTENT_W = PAGE_W - MARGIN * 2;
 
-function skillsHtml(): string {
-  const tags: SkillTag[] = ['lang', 'ai', 'built', 'infra'];
-  return tags
-    .map((tag) => {
-      const list = skills
-        .filter((s) => s.tag === tag)
-        .map(
-          (s) =>
-            `<span class="skill">${esc(s.name)} <span class="dots">${'●'.repeat(s.level)}${'○'.repeat(5 - s.level)}</span></span>`,
-        )
-        .join('');
-      return `<div class="skill-row"><span class="skill-tag">${esc(skillTags[tag])}</span><span class="skill-list">${list}</span></div>`;
-    })
-    .join('');
-}
+function makeDoc() {
+  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  let y = MARGIN;
 
-function researchHtml(): string {
-  const cats: ResearchCategory[] = ['journal', 'thesis', 'book', 'conference', 'paper'];
-  return cats
-    .map((cat) => {
-      const entries = research.filter((r) => r.category === cat);
-      if (!entries.length) return '';
-      const label = cat === 'conference' ? 'conference talks' : `${researchCategories[cat]}s`;
-      const items = entries
-        .map(
-          (r) =>
-            `<li>${esc(r.authors)} (${r.year}). <em>${esc(r.title)}</em>. ${esc(r.venue)}.${
-              r.link ? ` <a href="${esc(r.link)}">link</a>` : ''
-            }</li>`,
-        )
-        .join('');
-      return `<h3>${esc(label)}</h3><ul class="pubs">${items}</ul>`;
-    })
-    .join('');
-}
+  function ensureSpace(next: number) {
+    if (y + next > PAGE_H - MARGIN) {
+      doc.addPage();
+      y = MARGIN;
+    }
+  }
 
-function cvHtml(): string {
-  const date = new Date().toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
+  function heading(text: string) {
+    ensureSpace(10);
+    y += 4;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(20, 20, 20);
+    doc.text(text.toUpperCase(), MARGIN, y);
+    y += 1.5;
+    doc.setDrawColor(160);
+    doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+    y += 5;
+  }
+
+  function entry(head: string, side: string, sub: string, detail?: string) {
+    const detailLines = detail ? doc.splitTextToSize(detail, CONTENT_W) : [];
+    ensureSpace(5 + (sub ? 4 : 0) + detailLines.length * 4);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    doc.setTextColor(20, 20, 20);
+    doc.text(head, MARGIN, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(90, 90, 90);
+    doc.text(side, PAGE_W - MARGIN, y, { align: 'right' });
+    y += 4;
+
+    if (sub) {
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(70, 70, 70);
+      doc.text(sub, MARGIN, y);
+      y += 4;
+    }
+
+    if (detailLines.length) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(85, 85, 85);
+      doc.text(detailLines, MARGIN, y);
+      y += detailLines.length * 3.8;
+    }
+    y += 2;
+  }
+
+  function bullet(text: string) {
+    const lines = doc.splitTextToSize(`•  ${text}`, CONTENT_W - 2);
+    ensureSpace(lines.length * 4);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.8);
+    doc.setTextColor(40, 40, 40);
+    doc.text(lines, MARGIN, y);
+    y += lines.length * 4;
+  }
+
+  // ---- header ----
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(19);
+  doc.setTextColor(15, 15, 15);
+  doc.text(profile.name, MARGIN, y);
+  y += 6;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(60, 60, 60);
+  doc.text(profile.title, MARGIN, y);
+  y += 5;
+
+  doc.setFontSize(8.5);
+  doc.setTextColor(90, 90, 90);
+  const contact = [profile.location, profile.email, profile.linkedin, profile.languages.join(', ')].join('   ·   ');
+  doc.text(doc.splitTextToSize(contact, CONTENT_W), MARGIN, y);
+  y += 6;
+
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(9);
+  doc.setTextColor(50, 50, 50);
+  const taglineLines = doc.splitTextToSize(profile.tagline, CONTENT_W);
+  doc.text(taglineLines, MARGIN, y);
+  y += taglineLines.length * 4 + 2;
+
+  doc.setDrawColor(20);
+  doc.setLineWidth(0.6);
+  doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+  doc.setLineWidth(0.2);
+
+  // ---- experience ----
+  heading('Experience');
+  experience.forEach((e) => entry(e.role, e.period, e.org, e.detail));
+
+  // ---- education ----
+  heading('Education');
+  education.forEach((e) => entry(e.degree, e.period, e.school));
+
+  // ---- skills ----
+  heading('Skills');
+  (['lang', 'ai', 'built', 'infra'] as SkillTag[]).forEach((tag) => {
+    const list = skills.filter((s) => s.tag === tag);
+    if (!list.length) return;
+    ensureSpace(4);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.5);
+    doc.setTextColor(60, 60, 60);
+    doc.text(skillTags[tag], MARGIN, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(40, 40, 40);
+    doc.text(list.map((s) => s.name).join('   ·   '), MARGIN + 24, y);
+    y += 4.5;
+  });
+  y += 2;
+
+  // ---- awards ----
+  heading('Awards & Honours');
+  awards.forEach((a) => bullet(a));
+
+  // ---- courses ----
+  heading('Courses & Certifications');
+  courses.forEach((c) => entry(c.title, c.year, c.provider, c.items?.join(' · ')));
+
+  // ---- research ----
+  heading('Research & Publications');
+  (['journal', 'thesis', 'book', 'conference', 'paper'] as ResearchCategory[]).forEach((cat) => {
+    const list = research.filter((r) => r.category === cat);
+    if (!list.length) return;
+    ensureSpace(6);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(60, 60, 60);
+    doc.text((cat === 'conference' ? 'conference talks' : `${researchCategories[cat]}s`).toUpperCase(), MARGIN, y);
+    y += 4;
+    list.forEach((r) => {
+      const text = `${r.authors} (${r.year}). ${r.title}. ${r.venue}.`;
+      const lines = doc.splitTextToSize(text, CONTENT_W);
+      ensureSpace(lines.length * 3.6);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.3);
+      doc.setTextColor(50, 50, 50);
+      doc.text(lines, MARGIN, y);
+      y += lines.length * 3.6 + 1;
+    });
+    y += 1.5;
   });
 
-  const exp = experience
-    .map(
-      (e) => `
-      <div class="entry">
-        <div class="entry-head"><strong>${esc(e.role)}</strong><span class="period">${esc(e.period)}</span></div>
-        <div class="entry-sub">${esc(e.org)}</div>
-        <div class="entry-detail">${esc(e.detail)}${e.link ? ` · <a href="${esc(e.link)}">${esc(e.link.replace('https://', ''))}</a>` : ''}</div>
-      </div>`,
-    )
-    .join('');
-
-  const edu = education
-    .map(
-      (e) => `
-      <div class="entry">
-        <div class="entry-head"><strong>${esc(e.degree)}</strong><span class="period">${esc(e.period)}</span></div>
-        <div class="entry-sub">${esc(e.school)}</div>
-      </div>`,
-    )
-    .join('');
-
-  const crs = courses
-    .map(
-      (c) => `
-      <div class="entry">
-        <div class="entry-head"><strong>${esc(c.title)}</strong><span class="period">${esc(c.year)}</span></div>
-        <div class="entry-sub">${esc(c.provider)}${c.items ? ` — ${c.items.length} courses` : ''}</div>
-        ${c.items ? `<div class="entry-detail course-items">${c.items.map(esc).join(' · ')}</div>` : ''}
-      </div>`,
-    )
-    .join('');
-
-  const awd = awards.map((a) => `<li>${esc(a)}</li>`).join('');
-
-  return `<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>CV — ${esc(profile.name)}</title>
-<style>
-  @page { size: A4; margin: 16mm 18mm; }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font: 9.5pt/1.45 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #1a1a1a;
-  }
-  a { color: #1a5276; text-decoration: none; }
-  header { border-bottom: 2px solid #1a1a1a; padding-bottom: 8pt; margin-bottom: 10pt; }
-  h1 { font-size: 19pt; letter-spacing: 0.5pt; }
-  .title { font-size: 11pt; color: #444; margin-top: 2pt; }
-  .contact { font-size: 8.5pt; color: #555; margin-top: 5pt; }
-  .contact span + span::before { content: '  ·  '; }
-  .tagline { font-size: 9pt; color: #333; margin-top: 5pt; font-style: italic; }
-  h2 {
-    font-size: 10.5pt; text-transform: uppercase; letter-spacing: 1.2pt;
-    border-bottom: 1px solid #999; padding-bottom: 2pt; margin: 12pt 0 6pt;
-  }
-  h3 { font-size: 9pt; text-transform: capitalize; color: #444; margin: 7pt 0 3pt; }
-  .entry { margin-bottom: 6pt; break-inside: avoid; }
-  .entry-head { display: flex; justify-content: space-between; gap: 12pt; }
-  .period { color: #555; font-size: 8.5pt; white-space: nowrap; }
-  .entry-sub { color: #444; }
-  .entry-detail { color: #555; font-size: 8.8pt; }
-  .course-items { font-size: 8pt; color: #666; }
-  .skill-row { display: flex; gap: 8pt; margin-bottom: 3pt; break-inside: avoid; }
-  .skill-tag { flex: 0 0 70pt; font-weight: 600; color: #444; }
-  .skill-list { flex: 1; }
-  .skill { display: inline-block; margin-right: 10pt; white-space: nowrap; }
-  .dots { color: #666; font-size: 7pt; letter-spacing: 1pt; vertical-align: 0.5pt; }
-  ul { padding-left: 14pt; }
-  li { margin-bottom: 2.5pt; break-inside: avoid; }
-  .pubs { font-size: 8.5pt; color: #333; }
-  .pubs em { color: #1a1a1a; }
-  footer {
-    margin-top: 14pt; padding-top: 5pt; border-top: 1px solid #ccc;
-    font-size: 7.5pt; color: #888; display: flex; justify-content: space-between;
-  }
-</style>
-</head>
-<body>
-  <header>
-    <h1>${esc(profile.name)}</h1>
-    <div class="title">${esc(profile.title)}</div>
-    <div class="contact">
-      <span>${esc(profile.location)}</span>
-      <span><a href="mailto:${esc(profile.email)}">${esc(profile.email)}</a></span>
-      <span><a href="${esc(profile.linkedin)}">LinkedIn</a></span>
-      <span>${profile.languages.map(esc).join(', ')}</span>
-    </div>
-    <div class="tagline">${esc(profile.tagline)}</div>
-  </header>
-
-  <h2>Experience</h2>
-  ${exp}
-
-  <h2>Education</h2>
-  ${edu}
-
-  <h2>Skills</h2>
-  ${skillsHtml()}
-
-  <h2>Awards &amp; Honours</h2>
-  <ul>${awd}</ul>
-
-  <h2>Courses &amp; Certifications</h2>
-  ${crs}
-
-  <h2>Research &amp; Publications</h2>
-  ${researchHtml()}
-
-  <footer>
-    <span>${esc(profile.name)} — Curriculum Vitae</span>
-    <span>Generated on ${date}</span>
-  </footer>
-</body>
-</html>`;
+  return doc;
 }
 
-/** Opens a print-ready CV in a new tab and triggers the browser's PDF export. */
+/** Builds and downloads the CV as a real PDF file — no print dialog. */
 export function exportCv(): void {
-  const win = window.open('', '_blank');
-  if (!win) return; // popup blocked
-  win.document.write(cvHtml());
-  win.document.close();
-  win.focus();
-  // let fonts/layout settle before the print dialog opens
-  setTimeout(() => win.print(), 250);
+  makeDoc().save('cv.pdf');
 }
