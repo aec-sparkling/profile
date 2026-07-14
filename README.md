@@ -13,18 +13,16 @@ npm run dev
 
 ## Deploy to GitHub Pages
 
-1. Create a GitHub repo named `<your-username>.github.io`.
-2. Push this project:
+Repo: `https://github.com/sparkling-aec/profile` → live at `https://sparkling-aec.github.io/profile/`.
+
+1. Push:
    ```bash
-   git remote add origin git@github.com:<your-username>/<your-username>.github.io.git
    git push -u origin main
    ```
-3. In the repo: **Settings → Pages → Source: GitHub Actions**.
-4. The included workflow (`.github/workflows/deploy.yml`) builds and deploys on every push to `main`.
+2. In the repo: **Settings → Pages → Source: GitHub Actions**.
+3. The included workflow (`.github/workflows/deploy.yml`) builds and deploys on every push to `main`.
 
-Your page will be live at `https://<your-username>.github.io`.
-
-> If you use a project repo instead (e.g. `profile-page`), change `base` in `vite.config.js` to `'/profile-page/'`.
+> `base` in `vite.config.js` is set to `'/profile/'` to match the repo name. If you rename the repo, update it.
 
 ## Editing content
 

@@ -36,7 +36,7 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
     <header className="hero" style={{ opacity: Math.max(1 - y / 600, 0.25) }}>
       <div className="photo-wrap" style={{ transform: `translateY(${y * 0.18}px)` }}>
         <img
-          src="/profile.png"
+          src={`${import.meta.env.BASE_URL}profile.png`}
           alt={profile.name}
           className={`photo ${glitch ? 'glitch' : ''}`}
           onMouseEnter={() => setGlitch(true)}
