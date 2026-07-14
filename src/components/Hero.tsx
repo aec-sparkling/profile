@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { profile } from '../data';
 import { exportCv } from '../cv';
 import { useTypewriter } from '../hooks/useTypewriter';
@@ -21,9 +21,11 @@ interface HeroProps {
 export default function Hero({ theme, onCycleTheme }: HeroProps) {
   const [copied, setCopied] = useState(false);
   const [glitch, setGlitch] = useState(false);
+  const [cvMenuOpen, setCvMenuOpen] = useState(false);
   const typed = useTypewriter(TYPED_LINES);
   const { y } = useScroll();
   const photo = usePhotoShuffle();
+  const cvMenuRef = useRef<HTMLDivElement>(null);
 
   async function copyEmail() {
     try {
@@ -33,6 +35,22 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
     } catch {
       /* clipboard unavailable */
     }
+  }
+
+  useEffect(() => {
+    if (!cvMenuOpen) return;
+    function onClickOutside(e: MouseEvent) {
+      if (cvMenuRef.current && !cvMenuRef.current.contains(e.target as Node)) {
+        setCvMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, [cvMenuOpen]);
+
+  function handleExport(withPublications: boolean) {
+    setCvMenuOpen(false);
+    exportCv(withPublications, `${import.meta.env.BASE_URL}${photo}`, theme);
   }
 
   return (
@@ -72,9 +90,21 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
           >
             read(blog)
           </a>
-          <button onClick={exportCv} className="btn">
-            export(cv.pdf)
-          </button>
+          <div className="cv-export" ref={cvMenuRef}>
+            <button onClick={() => setCvMenuOpen((o) => !o)} className="btn">
+              export(cv.pdf) ▾
+            </button>
+            {cvMenuOpen && (
+              <div className="cv-menu">
+                <button onClick={() => handleExport(true)} className="cv-menu-item">
+                  (+) publications
+                </button>
+                <button onClick={() => handleExport(false)} className="cv-menu-item">
+                  (-) publications
+                </button>
+              </div>
+            )}
+          </div>
           <button onClick={onCycleTheme} className="btn theme-btn" title={`theme: ${theme}`}>
             <span className="theme-dot" />
           </button>

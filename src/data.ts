@@ -10,6 +10,9 @@ export const profile: Profile = {
   linkedin: 'https://www.linkedin.com/in/manav-mahan-singh-871928b1/',
   blog: 'blog/',
   languages: ['English (proficient)', 'German (beginner)', 'Hindi (native)'],
+  dateOfBirth: '24.01.1989',
+  nationality: 'Indian',
+  maritalStatus: 'Married, one son (3 years)',
 };
 
 export const skills: Skill[] = [
@@ -19,7 +22,6 @@ export const skills: Skill[] = [
   { name: 'React / Next.js', level: 4, tag: 'lang' },
   { name: 'Machine Learning', level: 5, tag: 'ai' },
   { name: 'PyTorch', level: 5, tag: 'ai' },
-  { name: 'TensorFlow', level: 4, tag: 'ai' },
   { name: 'LLMs & LoRA Training', level: 5, tag: 'ai' },
   { name: 'Google Gemini', level: 4, tag: 'ai' },
   { name: 'OpenAI', level: 4, tag: 'ai' },
@@ -50,7 +52,7 @@ export const experience: Experience[] = [
   {
     role: 'Post-Doctoral Researcher',
     org: 'Georg-Nemetschek-Institute, TU Munich, Germany',
-    period: 'Jul 2022 – Present',
+    period: 'Jul 2022 – Feb 2024',
     detail: 'AI methods for the built world and BIM applications.',
   },
   {
@@ -86,7 +88,7 @@ export const education: Education[] = [
     period: '2018 – 2022',
   },
   {
-    degree: 'M.Tech.',
+    degree: 'M.Tech. (Construction Engineering & Management)',
     school: 'Indian Institute of Technology, Delhi',
     period: '2012 – 2014 · 8.5/10',
   },

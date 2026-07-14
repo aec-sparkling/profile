@@ -7,9 +7,9 @@ import AwardsPanel from './AwardsPanel';
 import ResearchPanel from './ResearchPanel';
 
 const TABS = [
-  'skills.json',
   'experience.log',
   'education.md',
+  'skills.json',
   'courses.yml',
   'research.bib',
   'awards.txt',

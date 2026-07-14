@@ -87,7 +87,7 @@ body::after {
 }
 
 .page {
-  max-width: 900px;
+  max-width: 1080px;
   margin: 0 auto;
   padding: 48px 20px 90px;
   position: relative;
@@ -105,6 +105,12 @@ body::after {
 
 .photo-wrap {
   will-change: transform;
+  flex-shrink: 0;
+}
+
+.hero-text {
+  flex: 1 1 0%;
+  min-width: 0;
 }
 
 .photo {
@@ -156,10 +162,15 @@ body::after {
 }
 
 .tagline {
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 0.85rem;
-  max-width: 560px;
+  margin-top: 14px;
+  padding: 10px 16px;
+  border-left: 3px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border-radius: 0 6px 6px 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-style: italic;
+  line-height: 1.55;
 }
 
 .hero h1 {
@@ -218,6 +229,42 @@ body::after {
   color: var(--bg);
   box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 55%, transparent);
   transform: translateY(-1px);
+}
+
+.cv-export {
+  position: relative;
+  display: inline-block;
+}
+
+.cv-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 180px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 5;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.cv-menu-item {
+  display: block;
+  width: 100%;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 0.8rem;
+  text-align: left;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.cv-menu-item:hover {
+  background: var(--accent);
+  color: var(--bg);
 }
 
 .theme-btn {

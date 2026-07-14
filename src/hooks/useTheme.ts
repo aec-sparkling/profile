@@ -4,7 +4,9 @@ import type { Theme } from '../types';
 export const THEMES: readonly Theme[] = ['green', 'blue', 'purple', 'cyan', 'red'];
 
 export function useTheme(): { theme: Theme; cycleTheme: () => void } {
-  const [theme, setTheme] = useState<Theme>('blue');
+  const [theme, setTheme] = useState<Theme>(
+    () => THEMES[Math.floor(Math.random() * THEMES.length)]
+  );
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;

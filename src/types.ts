@@ -8,6 +8,9 @@ export interface Profile {
   /** blog URL — GitHub Pages blog, to be created */
   blog: string;
   languages: string[];
+  dateOfBirth: string;
+  nationality: string;
+  maritalStatus: string;
 }
 
 export type SkillTag = 'lang' | 'ai' | 'built' | 'infra';
