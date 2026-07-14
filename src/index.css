@@ -384,6 +384,29 @@ body::after {
   color: var(--accent);
 }
 
+.xp.static {
+  cursor: default;
+}
+
+.course-provider {
+  margin: 2px 0 0 22px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.course-items {
+  list-style: none;
+  margin: 8px 0 4px 22px;
+  font-size: 0.84rem;
+  color: var(--muted);
+  animation: fadein 0.25s;
+}
+
+.course-items li {
+  padding: 1px 0;
+}
+
 @keyframes fadein {
   from { opacity: 0; transform: translateY(-4px); }
 }

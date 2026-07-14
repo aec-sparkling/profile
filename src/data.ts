@@ -1,4 +1,4 @@
-import type { Profile, Skill, SkillTag, Experience, Education } from './types';
+import type { Profile, Skill, SkillTag, Experience, Education, Course } from './types';
 
 export const profile: Profile = {
   name: 'Manav Mahan SINGH (PhD)',
@@ -8,6 +8,8 @@ export const profile: Profile = {
   location: 'Essen, Germany',
   email: 'manav.mahan.singh@live.in',
   linkedin: 'https://www.linkedin.com/in/manav-mahan-singh-871928b1/',
+  // placeholder — point this at the GitHub Pages blog once it exists
+  blog: '/blog/',
   languages: ['English (proficient)', 'German (beginner)', 'Hindi (native)'],
 };
 
@@ -93,6 +95,58 @@ export const education: Education[] = [
     degree: 'B.Arch.',
     school: 'Gautam Buddh Technical University, Lucknow',
     period: '2007 – 2012 · 81.8%',
+  },
+];
+
+export const courses: Course[] = [
+  {
+    title: 'Accelerated Computer Science Fundamentals Specialization',
+    provider: 'Coursera · University of Illinois Urbana-Champaign',
+    year: '2021',
+    items: [
+      'Object-Oriented Data Structures in C++',
+      'Ordered Data Structures',
+      'Unordered Data Structures',
+    ],
+  },
+  {
+    title: 'DevOps, Cloud & Application Development',
+    provider: 'Coursera · IBM Skills Network',
+    year: '2023',
+    items: [
+      'Introduction to DevOps',
+      'Introduction to Containers w/ Docker, Kubernetes & OpenShift',
+      'Introduction to Test Driven Development',
+      'Introduction to Cloud Computing',
+      'Introduction to Agile Development and Scrum',
+      'Getting Started with Git and GitHub',
+      'Hands-on Introduction to Linux Commands and Shell Scripting',
+      'Application Security for Developers and DevOps Professionals',
+      'Continuous Integration and Continuous Delivery (CI/CD)',
+      'Application Development using Microservices and Serverless',
+      'Developing AI Applications with Python and Flask',
+      'Python for Data Science, AI & Development',
+    ],
+  },
+  {
+    title: 'Agile with Atlassian Jira',
+    provider: 'Coursera · Atlassian University',
+    year: '2023',
+  },
+  {
+    title: 'Python',
+    provider: 'KU Leuven',
+    year: '2021',
+  },
+  {
+    title: 'Machine Learning',
+    provider: 'Coursera',
+    year: '2020',
+  },
+  {
+    title: 'Modelling Languages (UML)',
+    provider: 'VU Brussels',
+    year: '2018',
   },
 ];
 

@@ -60,6 +60,9 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
           <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">
             open(linkedin)
           </a>
+          <a className="btn" href={profile.blog} title="coming soon">
+            read(blog)
+          </a>
           <button onClick={onCycleTheme} className="btn" title="cycle theme">
             theme: {theme}
           </button>

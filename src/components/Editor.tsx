@@ -2,15 +2,17 @@ import { useState, type ReactNode } from 'react';
 import SkillsPanel from './SkillsPanel';
 import ExperiencePanel from './ExperiencePanel';
 import EducationPanel from './EducationPanel';
+import CoursesPanel from './CoursesPanel';
 import AwardsPanel from './AwardsPanel';
 
-const TABS = ['skills.json', 'experience.log', 'education.md', 'awards.txt'] as const;
+const TABS = ['skills.json', 'experience.log', 'education.md', 'courses.yml', 'awards.txt'] as const;
 type Tab = (typeof TABS)[number];
 
 const PANELS: Record<Tab, ReactNode> = {
   'skills.json': <SkillsPanel />,
   'experience.log': <ExperiencePanel />,
   'education.md': <EducationPanel />,
+  'courses.yml': <CoursesPanel />,
   'awards.txt': <AwardsPanel />,
 };
 

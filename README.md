@@ -49,7 +49,9 @@ src/
     ├── SkillsPanel.tsx
     ├── ExperiencePanel.tsx
     ├── EducationPanel.tsx
+    ├── CoursesPanel.tsx
     ├── AwardsPanel.tsx
+    ├── BackToTop.tsx
     ├── Terminal.tsx    # interactive fake shell
     ├── MatrixRain.tsx  # easter egg
     ├── Reveal.tsx      # scroll-reveal wrapper

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { profile, skills, experience, education, awards } from '../data';
+import { profile, skills, experience, education, courses, awards } from '../data';
 
 interface TerminalProps {
   onTheme: () => void;
@@ -19,6 +19,7 @@ const COMMANDS: Record<string, () => string> = {
       '  skills       — tech stack',
       '  experience   — work history',
       '  education    — degrees',
+      '  courses      — certificates & courses',
       '  awards       — trophy cabinet',
       '  contact      — reach out',
       '  languages    — spoken, not programming',
@@ -35,12 +36,21 @@ const COMMANDS: Record<string, () => string> = {
   experience: () =>
     experience.map((e) => `[${e.period}] ${e.role}\n           └─ ${e.org}`).join('\n'),
   education: () => education.map((e) => `🎓 ${e.degree} — ${e.school} (${e.period})`).join('\n'),
+  courses: () =>
+    courses
+      .map(
+        (c) =>
+          `📜 ${c.title} — ${c.provider} (${c.year})` +
+          (c.items ? `\n${c.items.map((i) => `     · ${i}`).join('\n')}` : '')
+      )
+      .join('\n'),
   awards: () => awards.map((a) => `★ ${a}`).join('\n'),
   contact: () =>
-    `email:    ${profile.email}\nlinkedin: ${profile.linkedin}\nlocation: ${profile.location}`,
+    `email:    ${profile.email}\nlinkedin: ${profile.linkedin}\nblog:     ${profile.blog} (coming soon)\nlocation: ${profile.location}`,
+  blog: () => `📝 Blog coming soon at ${profile.blog} — stay tuned!`,
   languages: () => profile.languages.map((l) => `🗣 ${l}`).join('\n'),
   sudo: () => 'manav is not in the sudoers file. This incident will be reported. 👮',
-  ls: () => 'skills/  experience/  education/  awards/  secret_projects/ 🔒',
+  ls: () => 'skills/  experience/  education/  courses/  awards/  secret_projects/ 🔒',
   pwd: () => '/home/manav/profile',
   'rm -rf /': () => 'nice try. 🙃',
   hello: () => 'Hi there! Type `help` to see what I can do.',

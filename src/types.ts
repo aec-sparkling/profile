@@ -5,6 +5,8 @@ export interface Profile {
   location: string;
   email: string;
   linkedin: string;
+  /** blog URL — GitHub Pages blog, to be created */
+  blog: string;
   languages: string[];
 }
 
@@ -29,6 +31,14 @@ export interface Education {
   degree: string;
   school: string;
   period: string;
+}
+
+export interface Course {
+  title: string;
+  provider: string;
+  year: string;
+  /** individual course names for bundles/specializations */
+  items?: string[];
 }
 
 export type Theme = 'green' | 'amber' | 'blue';
