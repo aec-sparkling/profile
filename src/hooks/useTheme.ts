@@ -1,25 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Theme } from '../types';
 
-export const THEMES: readonly Theme[] = ['green', 'amber', 'blue'];
-
-function isTheme(value: string | null): value is Theme {
-  return value !== null && (THEMES as readonly string[]).includes(value);
-}
+export const THEMES: readonly Theme[] = ['green', 'blue', 'purple', 'cyan', 'red'];
 
 export function useTheme(): { theme: Theme; cycleTheme: () => void } {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const saved = localStorage.getItem('theme');
-    return isTheme(saved) ? saved : 'green';
-  });
+  const [theme, setTheme] = useState<Theme>('blue');
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    localStorage.setItem('theme', theme);
   }, [theme]);
 
   const cycleTheme = useCallback(() => {
-    setTheme((t) => THEMES[(THEMES.indexOf(t) + 1) % THEMES.length]);
+    setTheme((t) => {
+      const rest = THEMES.filter((x) => x !== t);
+      return rest[Math.floor(Math.random() * rest.length)];
+    });
   }, []);
 
   return { theme, cycleTheme };

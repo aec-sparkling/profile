@@ -1,0 +1,16 @@
+# Manav Mahan Singh (PhD)
+
+> AI Research & Development — Generative AI for the built world (BIM × Machine Learning).
+
+Manav is an AI researcher applying software engineering, machine learning, and generative AI
+to the built environment (BIM/CAD workflows), currently based in Essen, Germany.
+
+## Contact
+
+- LinkedIn: https://www.linkedin.com/in/manav-mahan-singh-871928b1/
+- Email: manav.mahan.singh@live.in
+- Blog: https://sparkling-aec.github.io/profile/blog/
+
+## Pages
+
+- [Profile](https://sparkling-aec.github.io/profile/): skills, experience, education, courses, awards

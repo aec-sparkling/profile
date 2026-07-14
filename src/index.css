@@ -10,17 +10,6 @@
   --border: #223522;
 }
 
-:root[data-theme='amber'] {
-  --bg: #0e0a04;
-  --panel: #171106;
-  --panel2: #1f1809;
-  --text: #f0dcb8;
-  --muted: #9a854f;
-  --accent: #ffb000;
-  --accent-dim: #8c6200;
-  --border: #3a2d10;
-}
-
 :root[data-theme='blue'] {
   --bg: #060a12;
   --panel: #0c1220;
@@ -30,6 +19,39 @@
   --accent: #4db8ff;
   --accent-dim: #1f6ea3;
   --border: #1d2b45;
+}
+
+:root[data-theme='purple'] {
+  --bg: #0c0a14;
+  --panel: #130f20;
+  --panel2: #1a1530;
+  --text: #ded2f5;
+  --muted: #8a7aa8;
+  --accent: #b573ff;
+  --accent-dim: #6d3ba3;
+  --border: #2b2145;
+}
+
+:root[data-theme='red'] {
+  --bg: #140505;
+  --panel: #200a0a;
+  --panel2: #2c0d0d;
+  --text: #f5d2d2;
+  --muted: #a87a7a;
+  --accent: #ff4d4d;
+  --accent-dim: #a32b2b;
+  --border: #451a1a;
+}
+
+:root[data-theme='cyan'] {
+  --bg: #04120e;
+  --panel: #071c16;
+  --panel2: #0a2820;
+  --text: #c8f5ea;
+  --muted: #63a897;
+  --accent: #29ffd0;
+  --accent-dim: #159c7c;
+  --border: #123a30;
 }
 
 * {
@@ -94,6 +116,20 @@ body::after {
   filter: grayscale(35%) contrast(1.05);
   transition: filter 0.25s, transform 0.25s, box-shadow 0.25s;
   cursor: crosshair;
+  animation: photoGenerate 0.4s ease-out;
+}
+
+@keyframes photoGenerate {
+  0% {
+    opacity: 0.75;
+    filter: blur(3px) saturate(0.8) contrast(1.05);
+    box-shadow: 0 0 8px 1px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+  100% {
+    opacity: 1;
+    filter: grayscale(35%) contrast(1.05);
+    box-shadow: none;
+  }
 }
 
 .photo:hover {
@@ -182,6 +218,23 @@ body::after {
   color: var(--bg);
   box-shadow: 0 0 16px color-mix(in srgb, var(--accent) 55%, transparent);
   transform: translateY(-1px);
+}
+
+.theme-btn {
+  padding: 6px 12px;
+}
+
+.theme-dot {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.theme-btn:hover .theme-dot {
+  background: var(--bg);
 }
 
 /* ---------- editor panel ---------- */
@@ -380,12 +433,19 @@ body::after {
   font-style: italic;
 }
 
-.xp-body a {
+.xp-body a,
+.xp a {
   color: var(--accent);
 }
 
 .xp.static {
   cursor: default;
+}
+
+.xp.static > a {
+  display: block;
+  margin: 4px 0 0 22px;
+  font-size: 0.8rem;
 }
 
 .course-provider {

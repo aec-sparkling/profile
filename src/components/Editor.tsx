@@ -4,8 +4,16 @@ import ExperiencePanel from './ExperiencePanel';
 import EducationPanel from './EducationPanel';
 import CoursesPanel from './CoursesPanel';
 import AwardsPanel from './AwardsPanel';
+import ResearchPanel from './ResearchPanel';
 
-const TABS = ['skills.json', 'experience.log', 'education.md', 'courses.yml', 'awards.txt'] as const;
+const TABS = [
+  'skills.json',
+  'experience.log',
+  'education.md',
+  'courses.yml',
+  'research.bib',
+  'awards.txt',
+] as const;
 type Tab = (typeof TABS)[number];
 
 const PANELS: Record<Tab, ReactNode> = {
@@ -13,6 +21,7 @@ const PANELS: Record<Tab, ReactNode> = {
   'experience.log': <ExperiencePanel />,
   'education.md': <EducationPanel />,
   'courses.yml': <CoursesPanel />,
+  'research.bib': <ResearchPanel />,
   'awards.txt': <AwardsPanel />,
 };
 

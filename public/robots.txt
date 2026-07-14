@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sparkling-aec.github.io/profile/sitemap.xml

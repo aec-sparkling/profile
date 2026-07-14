@@ -41,4 +41,15 @@ export interface Course {
   items?: string[];
 }
 
-export type Theme = 'green' | 'amber' | 'blue';
+export type Theme = 'green' | 'blue' | 'purple' | 'cyan' | 'red';
+
+export type ResearchCategory = 'journal' | 'thesis' | 'book' | 'conference' | 'paper';
+
+export interface Research {
+  category: ResearchCategory;
+  authors: string;
+  year: number | string;
+  title: string;
+  venue: string;
+  link?: string;
+}

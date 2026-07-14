@@ -46,8 +46,8 @@ const COMMANDS: Record<string, () => string> = {
       .join('\n'),
   awards: () => awards.map((a) => `★ ${a}`).join('\n'),
   contact: () =>
-    `email:    ${profile.email}\nlinkedin: ${profile.linkedin}\nblog:     ${profile.blog} (coming soon)\nlocation: ${profile.location}`,
-  blog: () => `📝 Blog coming soon at ${profile.blog} — stay tuned!`,
+    `email:    ${profile.email}\nlinkedin: ${profile.linkedin}\nblog:     ${profile.blog}\nlocation: ${profile.location}`,
+  blog: () => `📝 Blog is live at ${profile.blog} — go take a look!`,
   languages: () => profile.languages.map((l) => `🗣 ${l}`).join('\n'),
   sudo: () => 'manav is not in the sudoers file. This incident will be reported. 👮',
   ls: () => 'skills/  experience/  education/  courses/  awards/  secret_projects/ 🔒',

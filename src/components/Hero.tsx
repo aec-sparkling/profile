@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { profile } from '../data';
+import { exportCv } from '../cv';
 import { useTypewriter } from '../hooks/useTypewriter';
 import { useScroll } from '../hooks/useScroll';
+import { usePhotoShuffle } from '../hooks/usePhotoShuffle';
 import type { Theme } from '../types';
 
 const TYPED_LINES = [
@@ -21,6 +23,7 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
   const [glitch, setGlitch] = useState(false);
   const typed = useTypewriter(TYPED_LINES);
   const { y } = useScroll();
+  const photo = usePhotoShuffle();
 
   async function copyEmail() {
     try {
@@ -36,7 +39,8 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
     <header className="hero" style={{ opacity: Math.max(1 - y / 600, 0.25) }}>
       <div className="photo-wrap" style={{ transform: `translateY(${y * 0.18}px)` }}>
         <img
-          src={`${import.meta.env.BASE_URL}profile.png`}
+          key={photo}
+          src={`${import.meta.env.BASE_URL}${photo}`}
           alt={profile.name}
           className={`photo ${glitch ? 'glitch' : ''}`}
           onMouseEnter={() => setGlitch(true)}
@@ -60,11 +64,19 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
           <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">
             open(linkedin)
           </a>
-          <a className="btn" href={profile.blog} title="coming soon">
+          <a
+            className="btn"
+            href={`${import.meta.env.BASE_URL}${profile.blog}`}
+            target="_blank"
+            rel="noreferrer"
+          >
             read(blog)
           </a>
-          <button onClick={onCycleTheme} className="btn" title="cycle theme">
-            theme: {theme}
+          <button onClick={exportCv} className="btn">
+            export(cv.pdf)
+          </button>
+          <button onClick={onCycleTheme} className="btn theme-btn" title={`theme: ${theme}`}>
+            <span className="theme-dot" />
           </button>
         </div>
       </div>
