@@ -69,7 +69,7 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
         />
       </div>
       <div className="hero-text">
-        <p className="hero-comment">{'/** hello, world */'}</p>
+        <p className="hero-comment">{'/** hello, world, I am an aTD */'}</p>
         <h1>
           <span className="kw">const</span> me = <span className="str">"{profile.name}"</span>;
         </h1>
