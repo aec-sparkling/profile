@@ -223,7 +223,7 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
   const TEXT_X = SIDE_X + ICON_W;
   const TEXT_W = SIDE_W - ICON_W;
 
-  type IconKind = 'pin' | 'mail' | 'linkedin' | 'calendar' | 'globe' | 'family' | 'chat';
+  type IconKind = 'pin' | 'mail' | 'linkedin' | 'web' | 'calendar' | 'globe' | 'family' | 'chat';
 
   /** small vector glyphs — no icon font/dependency needed */
   function icon(kind: IconKind, cy: number) {
@@ -247,6 +247,13 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
         doc.setFontSize(5.5);
         doc.setTextColor(...NAVY);
         doc.text('in', x + 0.55, cy + 0.75);
+        break;
+      case 'web':
+        doc.roundedRect(x, cy - 1.6, 3.4, 3.2, 0.6, 0.6, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(5.5);
+        doc.setTextColor(...NAVY);
+        doc.text('W', x + 0.85, cy + 0.75);
         break;
       case 'calendar':
         doc.rect(x, cy - 1.5, 3.6, 3.1, 'S');
@@ -300,6 +307,7 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
   sideLine(profile.location, 'pin', false, true);
   sideLinkLine(profile.email, `mailto:${profile.email}`, 'mail');
   sideLinkLine('LinkedIn', profile.linkedin, 'linkedin');
+  sideLinkLine('Portfolio', 'https://sparkling-aec.github.io/profile/', 'web');
   sy += 2;
 
   sideLine(profile.dateOfBirth, 'calendar');
