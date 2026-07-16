@@ -407,16 +407,17 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
     doc.line(mainX, y, mainX + 22, y);
     y += 4;
 
-    const colW = mainW / 2;
+    const colGap = 8;
+    const colW = (mainW - colGap) / 2;
     for (let i = 0; i < list.length; i += 2) {
       ensureSpace(5.2);
       list.slice(i, i + 2).forEach((s, col) => {
-        const x = mainX + col * colW;
+        const x = mainX + col * (colW + colGap);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8.3);
         doc.setTextColor(40, 40, 40);
         doc.text(s.name, x, y);
-        levelBar(x + colW - BAR_W - 1, y - 2.2, s.level);
+        levelBar(x + colW - BAR_W, y - 2.2, s.level);
       });
       y += 5.2;
     }

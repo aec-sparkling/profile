@@ -18,7 +18,7 @@ export const profile: Profile = {
 export const skills: Skill[] = [
   { name: 'Python', level: 5, tag: 'lang' },
   { name: 'TypeScript', level: 4, tag: 'lang' },
-  { name: '.NET / C#', level: 3, tag: 'lang' },
+  { name: '.NET / C#', level: 4.5, tag: 'lang' },
   { name: 'React / Next.js', level: 4, tag: 'lang' },
   { name: 'Machine Learning', level: 5, tag: 'ai' },
   { name: 'PyTorch', level: 5, tag: 'ai' },

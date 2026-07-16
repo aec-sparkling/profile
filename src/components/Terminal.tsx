@@ -31,7 +31,10 @@ const COMMANDS: Record<string, () => string> = {
     `${profile.name}\n${profile.title} @ NeoBIM GmbH & TU Munich\n"${profile.tagline}"`,
   skills: () =>
     skills
-      .map((s) => `▸ ${s.name.padEnd(22)} ${'█'.repeat(s.level)}${'░'.repeat(5 - s.level)}`)
+      .map((s) => {
+        const lvl = Math.round(s.level);
+        return `▸ ${s.name.padEnd(22)} ${'█'.repeat(lvl)}${'░'.repeat(5 - lvl)}`;
+      })
       .join('\n'),
   experience: () =>
     experience.map((e) => `[${e.period}] ${e.role}\n           └─ ${e.org}`).join('\n'),
