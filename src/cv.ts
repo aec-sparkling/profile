@@ -223,7 +223,7 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
   const TEXT_X = SIDE_X + ICON_W;
   const TEXT_W = SIDE_W - ICON_W;
 
-  type IconKind = 'pin' | 'mail' | 'linkedin' | 'web' | 'calendar' | 'globe' | 'family' | 'chat';
+  type IconKind = 'pin' | 'mail' | 'linkedin' | 'web' | 'calendar' | 'chat';
 
   /** small vector glyphs — no icon font/dependency needed */
   function icon(kind: IconKind, cy: number) {
@@ -258,17 +258,6 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
       case 'calendar':
         doc.rect(x, cy - 1.5, 3.6, 3.1, 'S');
         doc.line(x, cy - 0.6, x + 3.6, cy - 0.6);
-        break;
-      case 'globe':
-        doc.setLineWidth(0.22);
-        doc.circle(x + 1.6, cy - 0.2, 1.5, 'S');
-        doc.line(x + 0.1, cy - 0.2, x + 3.1, cy - 0.2);
-        doc.ellipse(x + 1.6, cy - 0.2, 0.65, 1.5, 'S');
-        break;
-      case 'family':
-        doc.circle(x + 1, cy - 0.4, 0.75, 'F');
-        doc.circle(x + 2.5, cy - 0.4, 0.75, 'F');
-        doc.circle(x + 1.75, cy + 0.8, 0.55, 'F');
         break;
       case 'chat':
         doc.roundedRect(x, cy - 1.7, 3.8, 2.5, 0.7, 0.7, 'F');
@@ -311,8 +300,6 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
   sy += 2;
 
   sideLine(profile.dateOfBirth, 'calendar');
-  sideLine(profile.nationality, 'globe');
-  sideLine(profile.maritalStatus, 'family');
   sy += 2;
 
   icon('chat', sy - 1.1);
@@ -428,15 +415,27 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
   return doc;
 }
 
-/** Builds the CV as a real PDF and opens it in a new tab (browser's native PDF viewer). */
+/**
+ * Builds the CV as a real PDF and opens it in a new tab (browser's native PDF viewer).
+ *
+ * `preOpenedWindow` should be a tab opened synchronously in the click handler
+ * (e.g. `window.open('', '_blank')`) — building the PDF requires an `await`,
+ * and opening the tab only after that would lose the user-gesture context and
+ * get blocked as a pop-up. Passing an already-open tab sidesteps that.
+ */
 export async function exportCv(
   includePublications: boolean = true,
   photoUrl?: string,
-  theme: Theme = 'blue'
+  theme: Theme = 'blue',
+  preOpenedWindow?: Window | null
 ): Promise<void> {
   const photo = await loadPhoto(photoUrl ?? `${import.meta.env.BASE_URL}profile.png`);
   const doc = makeDoc(includePublications, photo, theme);
-  doc.setProperties({ title: 'manav-cv.pdf' });
-  const url = doc.output('bloburl');
-  window.open(url, '_blank');
+  doc.setProperties({ title: includePublications ? 'manav-cv-pubs.pdf' : 'manav-cv.pdf' });
+  const url = doc.output('bloburl').toString();
+  if (preOpenedWindow) {
+    preOpenedWindow.location.href = url;
+  } else {
+    window.open(url, '_blank');
+  }
 }

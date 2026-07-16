@@ -50,7 +50,10 @@ export default function Hero({ theme, onCycleTheme }: HeroProps) {
 
   function handleExport(withPublications: boolean) {
     setCvMenuOpen(false);
-    exportCv(withPublications, `${import.meta.env.BASE_URL}${photo}`, theme);
+    // open the tab synchronously, in the click handler, so the browser doesn't
+    // treat it as a pop-up once the PDF finishes building after an `await`
+    const tab = window.open('', '_blank');
+    exportCv(withPublications, `${import.meta.env.BASE_URL}${photo}`, theme, tab);
   }
 
   return (
