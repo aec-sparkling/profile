@@ -72,8 +72,44 @@ async function loadPhoto(url: string): Promise<Photo | null> {
   }
 }
 
+/**
+ * jsPDF's standard Helvetica font silently drops characters outside its
+ * built-in encoding (em/en dashes, curly quotes) instead of rendering them —
+ * the glyph just vanishes while width calculations still account for it,
+ * throwing off wrapping. Swap them for plain ASCII before anything is measured
+ * or drawn.
+ */
+function pdfSafe(text: string): string {
+  return text
+    .replace(/[–—]/g, '-')
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"');
+}
+
 function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+
+  const rawText = doc.text.bind(doc);
+  doc.text = ((text: string | string[], x: number, y: number, options?: unknown, transform?: unknown) =>
+    rawText(
+      Array.isArray(text) ? text.map(pdfSafe) : pdfSafe(text),
+      x,
+      y,
+      options as never,
+      transform as never
+    )) as typeof doc.text;
+
+  const rawSplit = doc.splitTextToSize.bind(doc);
+  doc.splitTextToSize = ((text: string, maxWidth: number, options?: unknown) =>
+    rawSplit(pdfSafe(text), maxWidth, options as never)) as typeof doc.splitTextToSize;
+
+  const rawLink = doc.textWithLink.bind(doc);
+  doc.textWithLink = ((text: string, x: number, y: number, options: unknown) =>
+    rawLink(pdfSafe(text), x, y, options as never)) as typeof doc.textWithLink;
+
+  const rawWidth = doc.getTextWidth.bind(doc);
+  doc.getTextWidth = ((text: string) => rawWidth(pdfSafe(text))) as typeof doc.getTextWidth;
+
   const { navy: NAVY, accent: ACCENT, accentDim: ACCENT_DIM, text: SIDE_TEXT } = THEME_PALETTES[theme];
   const LINK_ON_DARK = ACCENT;
   const LINK_ON_LIGHT = ACCENT_DIM;
@@ -123,10 +159,10 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
   }
 
   function heading(text: string) {
-    ensureSpace(10);
-    y += 5;
+    ensureSpace(11);
+    y += 6.5;
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
+    doc.setFontSize(11.5);
     doc.setTextColor(...INK);
     doc.text(text.toUpperCase(), mainX, y);
     const w = doc.getTextWidth(text.toUpperCase());
@@ -134,51 +170,55 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
     doc.setLineWidth(0.8);
     doc.line(mainX + w + 3, y - 1.2, mainX + mainW, y - 1.2);
     doc.setLineWidth(0.2);
-    y += 5;
+    y += 6;
   }
 
   function entry(head: string, side: string, sub: string, detail?: string) {
+    // splitTextToSize measures using whatever font/size is currently active,
+    // so set the detail line's font before measuring, not just before drawing
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.8);
     const detailLines = detail ? doc.splitTextToSize(detail, mainW) : [];
-    ensureSpace(5 + (sub ? 4 : 0) + detailLines.length * 3.8);
+    ensureSpace(6 + (sub ? 4.6 : 0) + detailLines.length * 4.4);
 
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9.5);
+    doc.setFontSize(10);
     doc.setTextColor(...INK);
     doc.text(head, mainX, y);
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
+    doc.setFontSize(8.3);
     doc.setTextColor(...MUTED);
     doc.text(side, mainX + mainW, y, { align: 'right' });
-    y += 4;
+    y += 4.6;
 
     if (sub) {
       doc.setFont('helvetica', 'italic');
-      doc.setFontSize(9);
+      doc.setFontSize(9.3);
       doc.setTextColor(80, 85, 92);
       doc.text(sub, mainX, y);
-      y += 4;
+      y += 4.6;
     }
 
     if (detailLines.length) {
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.5);
+      doc.setFontSize(8.8);
       doc.setTextColor(90, 90, 90);
       doc.text(detailLines, mainX, y);
-      y += detailLines.length * 3.8;
+      y += detailLines.length * 4.4;
     }
-    y += 2.2;
+    y += 3.4;
   }
 
   function bullet(text: string) {
-    const lines = doc.splitTextToSize(text, mainW - 4);
-    ensureSpace(lines.length * 4);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.1);
+    const lines = doc.splitTextToSize(text, mainW - 3.5);
+    ensureSpace(lines.length * 4.6);
     doc.setFillColor(...ACCENT);
     doc.circle(mainX + 0.6, y - 1.1, 0.6, 'F');
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.8);
     doc.setTextColor(50, 50, 50);
     doc.text(lines, mainX + 3.5, y);
-    y += lines.length * 4;
+    y += lines.length * 4.6 + 1;
   }
 
   /** clickable single-line link, right after the given text block */
@@ -320,11 +360,11 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
   y += 6;
 
   doc.setFont('helvetica', 'italic');
-  doc.setFontSize(9);
+  doc.setFontSize(9.5);
   doc.setTextColor(90, 90, 90);
   const taglineLines = doc.splitTextToSize(profile.tagline, mainW);
   doc.text(taglineLines, mainX, y);
-  y += taglineLines.length * 4 + 4;
+  y += taglineLines.length * 4.5 + 6;
 
   heading('Experience');
   experience.forEach((e) => entry(e.role, e.period, e.org, e.detail));
@@ -334,6 +374,9 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
 
   heading('Awards & Honours');
   awards.forEach((a) => bullet(a));
+
+  // courses always start on a fresh page, leaving page 1 to breathe
+  newContinuationPage();
 
   heading('Courses & Certifications');
   courses.forEach((c) => entry(c.title, c.year, c.provider, c.items?.join(' · ')));
@@ -397,11 +440,11 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
       doc.text((cat === 'conference' ? 'conference talks' : `${researchCategories[cat]}s`).toUpperCase(), mainX, y);
       y += 4;
       list.forEach((r) => {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.3);
         const text = `${r.authors} (${r.year}). ${r.title}. ${r.venue}.`;
         const lines = doc.splitTextToSize(text, mainW);
         ensureSpace(lines.length * 3.6);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8.3);
         doc.setTextColor(60, 60, 60);
         doc.text(lines, mainX, y);
         y += lines.length * 3.6 + 0.5;
@@ -431,8 +474,12 @@ export async function exportCv(
 ): Promise<void> {
   const photo = await loadPhoto(photoUrl ?? `${import.meta.env.BASE_URL}profile.png`);
   const doc = makeDoc(includePublications, photo, theme);
-  doc.setProperties({ title: includePublications ? 'manav-cv-pubs.pdf' : 'manav-cv.pdf' });
-  const url = doc.output('bloburl').toString();
+  const filename = includePublications ? 'manav-cv-pubs.pdf' : 'manav-cv.pdf';
+  doc.setProperties({ title: filename });
+  // wrap the blob in a named File — browsers use this as the suggested
+  // filename when the PDF viewer's own blob: URL would otherwise be nameless
+  const file = new File([doc.output('blob')], filename, { type: 'application/pdf' });
+  const url = URL.createObjectURL(file);
   if (preOpenedWindow) {
     preOpenedWindow.location.href = url;
   } else {
