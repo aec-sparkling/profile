@@ -13,7 +13,7 @@ npm run dev
 
 ## Deploy to GitHub Pages
 
-Repo: `https://github.com/sparkling-aec/profile` → live at `https://sparkling-aec.github.io/profile/`.
+Repo: `https://github.com/manavmahan/profile` → live at `https://manavmahan.github.io/profile/`.
 
 1. Push:
    ```bash

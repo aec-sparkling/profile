@@ -336,7 +336,7 @@ function makeDoc(includePublications: boolean, photo: Photo | null, theme: Theme
   sideLine(profile.location, 'pin', false, true);
   sideLinkLine(profile.email, `mailto:${profile.email}`, 'mail');
   sideLinkLine('LinkedIn', profile.linkedin, 'linkedin');
-  sideLinkLine('Portfolio', 'https://sparkling-aec.github.io/profile/', 'web');
+  sideLinkLine('Portfolio', 'https://manavmahan.github.io/profile/', 'web');
   sy += 2;
 
   sideLine(profile.dateOfBirth, 'calendar');

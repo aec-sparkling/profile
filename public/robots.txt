@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sparkling-aec.github.io/profile/sitemap.xml
+Sitemap: https://manavmahan.github.io/profile/sitemap.xml
