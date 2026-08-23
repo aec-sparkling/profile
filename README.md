@@ -56,3 +56,4 @@ src/
     ├── ScrollProgress.tsx
     └── StatusBar.tsx
 ```
+
